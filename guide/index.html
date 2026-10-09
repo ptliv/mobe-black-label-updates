@@ -1,0 +1,598 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>MOBE BLACK LABEL 사용설명서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Noto+Sans+KR:wght@400;500;700;800&family=IBM+Plex+Mono:wght@500&display=swap" />
+<style>
+  /* 레이아웃: 왼쪽에 고정 목차, 오른쪽에 장(章)이 이어지는 전자책. 휴대폰에서는 목차가 위로 접힌다. 블랙 라벨(검정·금색)이 기본, 밝은 테마도 지원. */
+  :root {
+    color-scheme: dark;
+    --bg: #0c0b0a;
+    --surface: #15130f;
+    --surface-2: #1d1a15;
+    --line: #2c2720;
+    --ink: #efe7d8;
+    --ink-2: #cbc1b0;
+    --muted: #918877;
+    --gold: #c9a86a;
+    --gold-2: #e6cc93;
+    --gold-soft: rgba(201, 168, 106, 0.12);
+    --ok: #93c3a2;
+    --warn: #e3b46e;
+    --danger: #df8572;
+    --shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+    --ms-blue: #0f5ca8;
+    --ms-blue-2: #0a4c8d;
+    --ms-ink: #ffffff;
+    --display: "Cormorant Garamond", "Times New Roman", serif;
+    --body: "Noto Sans KR", "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    --mono: "IBM Plex Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: light) {
+    :root:not([data-theme="dark"]) {
+      color-scheme: light;
+      --bg: #f5f1e8; --surface: #fffdf8; --surface-2: #f0eadd; --line: #e0d6c3;
+      --ink: #1c1811; --ink-2: #3d362b; --muted: #6e6555; --gold: #8c672a; --gold-2: #7a5a22;
+      --gold-soft: rgba(140, 103, 42, 0.1); --ok: #2e7650; --warn: #a86e1c; --danger: #b0412d;
+      --shadow: 0 14px 34px rgba(60, 45, 20, 0.14);
+    }
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --bg: #f5f1e8; --surface: #fffdf8; --surface-2: #f0eadd; --line: #e0d6c3;
+    --ink: #1c1811; --ink-2: #3d362b; --muted: #6e6555; --gold: #8c672a; --gold-2: #7a5a22;
+    --gold-soft: rgba(140, 103, 42, 0.1); --ok: #2e7650; --warn: #a86e1c; --danger: #b0412d;
+    --shadow: 0 14px 34px rgba(60, 45, 20, 0.14);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.75 var(--body); -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-wrap: anywhere; }
+  a { color: var(--gold-2); text-underline-offset: 3px; }
+  img { max-width: 100%; }
+  :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+
+  /* 표지 */
+  .cover { padding-block: 72px 56px; padding-inline: 20px; text-align: center; border-bottom: 1px solid var(--line); background: radial-gradient(760px 380px at 50% 0%, var(--gold-soft), transparent 70%), var(--bg); }
+  .cover .kicker { display: block; font-size: 12px; font-weight: 800; letter-spacing: 0.42em; color: var(--gold); }
+  .cover h1 { margin: 14px 0 0; font-family: var(--display); font-weight: 600; font-size: clamp(52px, 11vw, 92px); line-height: 1; letter-spacing: 0.14em; padding-left: 0.14em; color: var(--gold-2); text-wrap: balance; }
+  .cover .label { display: block; margin-top: 12px; font-size: 12px; font-weight: 700; letter-spacing: 0.5em; padding-left: 0.5em; color: var(--ink-2); }
+  .cover .title { margin: 28px auto 0; max-width: 34ch; font-size: clamp(20px, 3.6vw, 26px); font-weight: 800; line-height: 1.45; text-wrap: balance; }
+  .cover .lead { margin: 12px auto 0; max-width: 46ch; color: var(--ink-2); }
+  .cover .meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 26px; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); font-size: 13px; color: var(--ink-2); }
+
+  /* 본문 틀 */
+  .book { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 44px; max-width: 1180px; margin: 0 auto; padding-block: 40px 90px; padding-inline: 20px; }
+  .toc { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 20px); align-self: start; max-height: calc(100vh - 40px); overflow-y: auto; }
+  .toc h2 { margin: 0 0 10px; font-size: 12px; font-weight: 800; letter-spacing: 0.24em; color: var(--muted); }
+  .toc ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 2px; }
+  .toc a { display: grid; grid-template-columns: 30px 1fr; align-items: baseline; padding: 7px 10px; border-radius: 8px; color: var(--ink-2); text-decoration: none; font-size: 14px; line-height: 1.45; }
+  .toc a span { font-family: var(--display); font-size: 17px; color: var(--gold); font-variant-numeric: lining-nums; }
+  .toc a:hover, .toc a.on { background: var(--gold-soft); color: var(--ink); }
+  .toc-mobile { display: none; }
+  main { min-width: 0; }
+
+  /* 장 */
+  .chapter { padding-block: 10px 54px; border-bottom: 1px solid var(--line); scroll-margin-top: 20px; }
+  .chapter:last-of-type { border-bottom: 0; }
+  .chapter-head { display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; align-items: end; margin-bottom: 18px; }
+  .chapter-no { grid-row: span 2; font-family: var(--display); font-size: 74px; line-height: 0.8; color: var(--gold); font-variant-numeric: lining-nums; }
+  .chapter-kicker { font-size: 12px; font-weight: 800; letter-spacing: 0.2em; color: var(--muted); }
+  .chapter h2 { margin: 0; font-size: clamp(24px, 3.4vw, 31px); line-height: 1.3; font-weight: 800; text-wrap: balance; }
+  .chapter > p, .chapter .prose { max-width: 66ch; color: var(--ink-2); }
+  h3 { margin: 34px 0 10px; font-size: 19px; font-weight: 800; text-wrap: balance; }
+
+  /* 단계 */
+  ol.steps { margin: 18px 0 0; padding: 0; list-style: none; counter-reset: step; display: grid; gap: 26px; }
+  ol.steps > li { counter-increment: step; display: grid; grid-template-columns: 38px minmax(0, 1fr); gap: 14px; }
+  ol.steps > li::before { content: counter(step); display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--gold); color: var(--gold-2); font-family: var(--display); font-size: 19px; font-weight: 600; font-variant-numeric: lining-nums; }
+  .step-body { min-width: 0; }
+  .step-body > p { margin: 4px 0 0; max-width: 64ch; }
+  .step-title { margin: 3px 0 0; font-size: 17px; font-weight: 800; }
+  b.btn, span.btn { display: inline-block; padding: 0 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface-2); color: var(--ink); font-weight: 700; font-size: 0.93em; line-height: 1.6; white-space: nowrap; }
+  kbd { padding: 1px 7px; border: 1px solid var(--line); border-bottom-width: 2px; border-radius: 6px; background: var(--surface); font: 600 0.88em var(--mono); }
+  code { padding: 1px 6px; border-radius: 5px; background: var(--surface-2); font: 500 0.88em var(--mono); color: var(--gold-2); }
+
+  /* 그림 */
+  figure { margin: 14px 0 0; }
+  figure button.zoom { display: block; width: 100%; padding: 0; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: var(--surface); cursor: zoom-in; box-shadow: var(--shadow); }
+  figure img { display: block; width: 100%; height: auto; }
+  figure.phone { max-width: 330px; }
+  figure.dialog { max-width: 600px; }
+  figure.half { max-width: 640px; }
+  figcaption { margin-top: 8px; font-size: 13.5px; color: var(--muted); }
+  .figs { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: start; }
+
+  /* 안내 상자 */
+  .box { margin-top: 14px; padding: 13px 16px; border: 1px solid var(--line); border-left-width: 4px; border-radius: 10px; background: var(--surface); max-width: 66ch; }
+  .box strong:first-child { display: block; margin-bottom: 2px; font-size: 14px; letter-spacing: 0.04em; }
+  .box p { margin: 0; color: var(--ink-2); }
+  .box.tip { border-left-color: var(--ok); }
+  .box.tip strong:first-child { color: var(--ok); }
+  .box.must { border-left-color: var(--gold); }
+  .box.must strong:first-child { color: var(--gold-2); }
+  .box.warn { border-left-color: var(--danger); }
+  .box.warn strong:first-child { color: var(--danger); }
+
+  /* 준비물 / 표 */
+  .checklist { margin: 16px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+  .checklist li { padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+  .checklist b { display: block; font-size: 15px; }
+  .checklist span { font-size: 14px; color: var(--muted); }
+  .table-wrap { margin-top: 14px; overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 520px; }
+  th, td { padding: 11px 14px; text-align: left; vertical-align: top; border-top: 1px solid var(--line); }
+  thead th { border-top: 0; background: var(--surface-2); font-size: 13px; letter-spacing: 0.04em; color: var(--muted); }
+  td:first-child { white-space: nowrap; font-weight: 700; }
+  .tag { display: inline-block; padding: 1px 8px; border-radius: 999px; font: 700 12px/1.7 var(--body); letter-spacing: 0.08em; background: var(--gold-soft); color: var(--gold-2); }
+
+  /* 윈도우 PC 보호 예시 그림 */
+  .smartscreen { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 14px; }
+  .ms { min-height: 270px; padding: 22px 22px 18px; border-radius: 6px; background: var(--ms-blue); color: var(--ms-ink); font-family: "Segoe UI", "Malgun Gothic", sans-serif; display: flex; flex-direction: column; box-shadow: var(--shadow); }
+  .ms h4 { margin: 0 0 10px; font-size: 22px; font-weight: 400; }
+  .ms p { margin: 0 0 8px; font-size: 13px; line-height: 1.6; }
+  .ms .more { text-decoration: underline; font-size: 13px; }
+  .ms dl { margin: 6px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 13px; }
+  .ms dt { opacity: 0.85; }
+  .ms .actions { margin-top: auto; display: flex; justify-content: flex-end; gap: 8px; padding-top: 14px; }
+  .ms .actions span { padding: 6px 18px; border: 1px solid rgba(255, 255, 255, 0.6); background: var(--ms-blue-2); font-size: 13px; }
+  .ms .actions span.go { outline: 3px solid var(--gold-2); outline-offset: 2px; }
+  .ms .hl { outline: 3px solid var(--gold-2); outline-offset: 3px; border-radius: 2px; }
+  .sample { margin-top: 6px; font-size: 13px; color: var(--muted); }
+
+  /* 확대 보기 */
+  .lightbox { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; padding: 18px; background: rgba(5, 4, 3, 0.86); cursor: zoom-out; }
+  .lightbox[hidden] { display: none; }
+  .lightbox img { max-width: min(1280px, 100%); max-height: 100%; border-radius: 10px; box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6); }
+  .lightbox p { position: absolute; left: 0; right: 0; bottom: calc(env(safe-area-inset-bottom, 0px) + 12px); margin: 0; text-align: center; font-size: 13px; color: #e8dcc6; }
+
+  .end { margin-top: 30px; padding: 26px; border: 1px solid var(--line); border-radius: 14px; background: radial-gradient(500px 220px at 50% 0%, var(--gold-soft), transparent 70%), var(--surface); text-align: center; }
+  .end p { margin: 6px auto 0; max-width: 52ch; color: var(--ink-2); }
+  .end .sig { margin-top: 14px; font-family: var(--display); font-size: 26px; letter-spacing: 0.2em; color: var(--gold-2); }
+
+  @media (max-width: 920px) {
+    .book { grid-template-columns: minmax(0, 1fr); gap: 0; padding-block: 18px 70px; }
+    .toc { display: none; }
+    .toc-mobile { display: block; margin: 0 0 18px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); }
+    .toc-mobile summary { padding: 13px 16px; font-weight: 800; cursor: pointer; }
+    .toc-mobile ol { margin: 0; padding: 0 8px 10px; list-style: none; display: grid; gap: 2px; }
+    .toc-mobile a { display: grid; grid-template-columns: 30px 1fr; padding: 8px 10px; border-radius: 8px; color: var(--ink-2); text-decoration: none; font-size: 15px; }
+    .toc-mobile a span { font-family: var(--display); font-size: 17px; color: var(--gold); }
+    .chapter-no { font-size: 56px; }
+    .figs, .smartscreen { grid-template-columns: minmax(0, 1fr); }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; }
+  }
+</style>
+</head>
+<body>
+
+
+<header class="cover">
+  <span class="kicker">FOUNDERS EDITION · 당첨자 전용</span>
+  <h1>MOBE</h1>
+  <span class="label">BLACK LABEL</span>
+  <p class="title">당첨을 축하해요!<br />설치부터 매일 자동 서이추까지, 이 책 하나로 따라 하면 돼요.</p>
+  <p class="lead">처음 컴퓨터 프로그램을 설치해 보는 분도 그대로 따라 할 수 있게, 실제 화면을 한 장씩 캡처해서 순서대로 담았어요. 그림을 누르면 크게 볼 수 있어요.</p>
+  <div class="meta">
+    <span class="chip">처음 설정까지 약 15분</span>
+    <span class="chip">윈도우 PC 전용</span>
+    <span class="chip">버전 1.0.0</span>
+  </div>
+  <p class="meta"><a class="chip" href="MOBE-guide.html" download="MOBE-사용설명서.html">설명서를 파일로 받기 (인터넷 없이 보기)</a></p>
+</header>
+
+<div class="book">
+  <nav class="toc" aria-label="목차">
+    <h2>목차</h2>
+    <ol id="tocList">
+      <li><a href="#ch0"><span>0</span>시작 전 준비물</a></li>
+      <li><a href="#ch1"><span>1</span>당첨 확인하고 초대 코드 받기</a></li>
+      <li><a href="#ch2"><span>2</span>설치 파일 받기</a></li>
+      <li><a href="#ch3"><span>3</span>설치하기</a></li>
+      <li><a href="#ch4"><span>4</span>처음 켜기 · 초대 코드 넣기</a></li>
+      <li><a href="#ch5"><span>5</span>설정 마법사</a></li>
+      <li><a href="#ch6"><span>6</span>네이버 계정 추가 · 로그인</a></li>
+      <li><a href="#ch7"><span>7</span>서이추 자동 신청</a></li>
+      <li><a href="#ch8"><span>8</span>매일 자동 예약</a></li>
+      <li><a href="#ch9"><span>9</span>공감 · 댓글 · 스크랩</a></li>
+      <li><a href="#ch10"><span>10</span>기록 · 설정 · AI 키</a></li>
+      <li><a href="#ch11"><span>11</span>안전하게 쓰는 요령</a></li>
+      <li><a href="#ch12"><span>12</span>문제가 생겼을 때</a></li>
+    </ol>
+  </nav>
+
+  <main>
+    <details class="toc-mobile">
+      <summary>목차 열기</summary>
+      <ol id="tocMobile"></ol>
+    </details>
+
+    <!-- 0 -->
+    <section class="chapter" id="ch0">
+      <div class="chapter-head"><span class="chapter-no">0</span><span class="chapter-kicker">BEFORE YOU START</span><h2>시작 전 준비물</h2></div>
+      <p>아래 다섯 가지만 있으면 돼요. 마지막 하나는 없어도 프로그램이 동작해요.</p>
+      <ul class="checklist">
+        <li><b>윈도우 10 또는 11 PC</b><span>맥북·휴대폰에서는 설치할 수 없어요.</span></li>
+        <li><b>네이버 블로그 계정</b><span>아이디와 비밀번호를 알고 있어야 해요.</span></li>
+        <li><b>신청할 때 쓴 닉네임 + 숫자 4자리</b><span>당첨 확인과 초대 코드를 받을 때 필요해요.</span></li>
+        <li><b>인터넷 연결</b><span>처음 켤 때와 사용하는 동안 계속 필요해요.</span></li>
+        <li><b>(선택) AI 키</b><span>인사말·댓글을 상대 블로그에 맞게 써 줘요. 10장에서 설명해요.</span></li>
+      </ul>
+      <div class="box must"><strong>꼭 알아두기</strong><p>초대 코드와 설치 파일은 당첨자 본인만 써 주세요. 코드를 다른 사람과 나누면 그 코드는 회수될 수 있어요.</p></div>
+    </section>
+
+    <!-- 1 -->
+    <section class="chapter" id="ch1">
+      <div class="chapter-head"><span class="chapter-no">1</span><span class="chapter-kicker">STEP 1 · 휴대폰 또는 PC</span><h2>당첨 확인하고 초대 코드 받기</h2></div>
+      <p>단톡방에 올라온 신청 페이지에서 내 결과를 확인하고, 초대 코드를 받아요. 초대 코드는 프로그램을 처음 켤 때 한 번 넣는 "열쇠"예요.</p>
+      <ol class="steps">
+        <li><div class="step-body">
+          <p class="step-title">신청 페이지를 열어요</p>
+          <p>단톡방의 신청 페이지 링크를 눌러요. 맨 위에 당첨자 명단이 보이고, 아래로 내리면 <b class="btn">내 결과 확인</b>이 있어요.</p>
+          <figure class="phone"><button type="button" class="zoom"><img src="img/p0-results.jpg" alt="신청 페이지의 당첨자 명단" loading="lazy" /></button><figcaption>추첨이 끝나면 당첨자 명단이 공개돼요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">닉네임과 숫자 4자리를 넣어요</p>
+          <p>신청할 때 쓴 카카오톡 닉네임과 직접 정한 숫자 4자리를 넣고 <b class="btn">결과 보기</b>를 눌러요.</p>
+          <figure class="phone"><button type="button" class="zoom"><img src="img/p1-lookup.jpg" alt="내 결과 확인 입력칸" loading="lazy" /></button><figcaption>닉네임은 신청할 때와 똑같이 써야 해요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">내 번호와 초대 코드를 확인해요</p>
+          <p>당첨이면 <b>FOUNDERS EDITION No.○○</b>과 <code>MOBE-</code>로 시작하는 긴 초대 코드가 나와요. <b class="btn">초대 코드 복사</b>를 눌러 복사해 두세요. <b class="btn">설치 파일 받기</b>는 2장에서 써요.</p>
+          <figure class="phone"><button type="button" class="zoom"><img src="img/p2-winner.jpg" alt="당첨 결과와 초대 코드" loading="lazy" /></button><figcaption>그림의 코드는 예시예요. 내 코드는 결과 화면에서 확인하세요.</figcaption></figure>
+        </div></li>
+      </ol>
+      <div class="box tip"><strong>팁 · 휴대폰에서 PC로 코드 옮기기</strong><p>휴대폰에서 확인했다면, 복사한 코드를 카카오톡 "나와의 채팅"에 붙여 넣어 보내 두세요. PC 카카오톡에서 그 메시지를 복사하면 끝이에요.</p></div>
+      <div class="box"><strong>"초대 코드를 준비하고 있어요"가 보이면</strong><p>추첨 직후 코드가 만들어지는 중이에요. 몇 분 뒤 같은 방법으로 다시 확인하면 코드가 보여요.</p></div>
+    </section>
+
+    <!-- 2 -->
+    <section class="chapter" id="ch2">
+      <div class="chapter-head"><span class="chapter-no">2</span><span class="chapter-kicker">STEP 2 · PC에서</span><h2>설치 파일 받기</h2></div>
+      <p>여기부터는 PC에서 해요. PC 인터넷 창으로 신청 페이지를 열고 1장처럼 결과를 확인한 뒤, <b class="btn">설치 파일 받기</b>를 누르세요. 구글 드라이브 화면이 열려요.</p>
+      <ol class="steps">
+        <li><div class="step-body">
+          <p class="step-title">구글 드라이브에서 [다운로드]</p>
+          <p>"미리보기가 없음"이라고 나와도 정상이에요. 가운데 <b class="btn">다운로드</b>를 눌러요. 구글 로그인은 필요 없어요.</p>
+          <figure class="half"><button type="button" class="zoom"><img src="img/d1-drive-view.jpg" alt="구글 드라이브 설치 파일 화면" loading="lazy" /></button><figcaption>파일 이름: MOBE-BlackLabel-Setup-1.0.0.exe</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">[무시하고 다운로드]</p>
+          <p>"Google Drive가 다운로드 파일에서 문제를 감지했습니다"라는 화면이 나와요. 파일이 커서(약 215MB) 구글이 바이러스 검사를 못 한다는 뜻이에요. <b class="btn">무시하고 다운로드</b>를 눌러요.</p>
+          <figure class="half"><button type="button" class="zoom"><img src="img/d2-drive-warning.jpg" alt="구글 드라이브 다운로드 경고" loading="lazy" /></button><figcaption>프로그램 설치 파일(.exe)은 구글이 항상 이렇게 안내해요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">다운로드가 끝날 때까지 기다려요</p>
+          <p>인터넷 속도에 따라 1~5분 걸려요. 파일은 보통 내 PC의 <b>다운로드</b> 폴더에 저장돼요. 크롬이 "흔히 다운로드되는 파일이 아닙니다"라고 하면 <b class="btn">계속</b>이나 <b class="btn">유지</b>를 눌러요.</p>
+        </div></li>
+      </ol>
+    </section>
+
+    <!-- 3 -->
+    <section class="chapter" id="ch3">
+      <div class="chapter-head"><span class="chapter-no">3</span><span class="chapter-kicker">STEP 3</span><h2>설치하기</h2></div>
+      <p>받은 파일 <b>MOBE-BlackLabel-Setup-1.0.0.exe</b>를 더블클릭해요. 아래 화면이 순서대로 나와요.</p>
+      <ol class="steps">
+        <li><div class="step-body">
+          <p class="step-title">"Windows의 PC 보호" 창이 뜨면 [추가 정보] → [실행]</p>
+          <p>개인이 만든 프로그램이라 마이크로소프트 인증서가 없어서 나오는 안내예요. 첫 번째 그림처럼 <b>추가 정보</b> 글자를 누르면, 두 번째 그림처럼 <b class="btn">실행</b> 버튼이 생겨요.</p>
+          <div class="smartscreen" aria-label="Windows의 PC 보호 창 예시 그림">
+            <div class="ms" role="img" aria-label="추가 정보를 누르기 전">
+              <h4>Windows의 PC 보호</h4>
+              <p>Microsoft Defender SmartScreen에서 인식할 수 없는 앱의 시작을 차단했습니다. 이 앱을 실행하면 PC가 위험에 노출될 수 있습니다.</p>
+              <span class="more hl">추가 정보</span>
+              <div class="actions"><span>실행 안 함</span></div>
+            </div>
+            <div class="ms" role="img" aria-label="추가 정보를 누른 뒤">
+              <h4>Windows의 PC 보호</h4>
+              <p>Microsoft Defender SmartScreen에서 인식할 수 없는 앱의 시작을 차단했습니다. 이 앱을 실행하면 PC가 위험에 노출될 수 있습니다.</p>
+              <dl><dt>앱:</dt><dd>MOBE-BlackLabel-Setup-1.0.0.exe</dd><dt>게시자:</dt><dd>알 수 없는 게시자</dd></dl>
+              <div class="actions"><span class="go">실행</span><span>실행 안 함</span></div>
+            </div>
+          </div>
+          <p class="sample">예시 그림이에요. 실제 창은 PC마다 조금 다를 수 있어요. 이 창이 안 뜨면 바로 다음 단계로 가요.</p>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">설치 옵션: 그대로 [다음 >]</p>
+          <p>"전용 (내 이름)"이 선택된 상태 그대로 <b class="btn">다음 &gt;</b>를 눌러요.</p>
+          <figure class="dialog"><button type="button" class="zoom"><img src="img/s1-install-option.png" alt="설치 옵션 선택 화면" loading="lazy" /></button><figcaption>내 윈도우 계정에만 설치돼요. 관리자 권한이 필요 없어요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">설치 위치: 그대로 [설치]</p>
+          <p>폴더는 바꾸지 않아도 돼요. <b class="btn">설치</b>를 눌러요.</p>
+          <figure class="dialog"><button type="button" class="zoom"><img src="img/s2-install-folder.png" alt="설치 위치 선택 화면" loading="lazy" /></button><figcaption>필요한 공간은 약 760MB예요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">설치중: 1~2분 기다려요</p>
+          <figure class="dialog"><button type="button" class="zoom"><img src="img/s3-installing.png" alt="설치 진행 화면" loading="lazy" /></button><figcaption>초록 막대가 끝까지 차면 다음 화면으로 넘어가요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">설치 완료: [마침]</p>
+          <p>"MOBE BLACK LABEL 실행하기"가 체크된 채로 <b class="btn">마침</b>을 누르면 프로그램이 바로 켜져요. 바탕화면과 시작 메뉴에도 <b>MOBE BLACK LABEL</b> 아이콘이 생겨요.</p>
+          <figure class="dialog"><button type="button" class="zoom"><img src="img/s4-install-done.png" alt="설치 완료 화면" loading="lazy" /></button><figcaption>다음부터는 바탕화면 아이콘을 더블클릭해서 켜요.</figcaption></figure>
+        </div></li>
+      </ol>
+    </section>
+
+    <!-- 4 -->
+    <section class="chapter" id="ch4">
+      <div class="chapter-head"><span class="chapter-no">4</span><span class="chapter-kicker">STEP 4</span><h2>처음 켜기 · 초대 코드 넣기</h2></div>
+      <p>처음 켜면 검정 바탕의 초대장 화면이 나와요. 1장에서 복사한 초대 코드를 여기에 넣어요. 인터넷이 연결된 상태여야 해요.</p>
+      <ol class="steps">
+        <li><div class="step-body">
+          <p class="step-title">초대 코드 칸을 눌러요</p>
+          <figure><button type="button" class="zoom"><img src="img/a01-invite.jpg" alt="초대장 화면" loading="lazy" /></button><figcaption>"MOBE- 로 시작하는 초대 코드를 붙여 넣으세요" 칸이에요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">붙여 넣고 [초대장 열기]</p>
+          <p>칸을 누른 뒤 <kbd>Ctrl</kbd> + <kbd>V</kbd>로 붙여 넣어요. 코드가 두세 줄로 보여도 괜찮아요. <b class="btn">초대장 열기</b>를 눌러요.</p>
+          <figure><button type="button" class="zoom"><img src="img/a02-invite-code.jpg" alt="초대 코드를 붙여 넣은 화면" loading="lazy" /></button><figcaption>코드는 처음부터 끝까지 빠짐없이 들어가야 해요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">내 에디션 번호 확인 → [시작하기]</p>
+          <p>내 번호와 닉네임이 새겨진 화면이 나와요. <b class="btn">시작하기</b>를 누르면 프로그램이 열려요. 초대 코드는 다음부터 다시 넣지 않아도 돼요.</p>
+          <figure><button type="button" class="zoom"><img src="img/a03-reveal.jpg" alt="에디션 번호 공개 화면" loading="lazy" /></button><figcaption>예시: FOUNDERS EDITION No.07 / 20</figcaption></figure>
+        </div></li>
+      </ol>
+      <div class="box warn"><strong>"유효하지 않은 초대 코드입니다"가 나오면</strong><p>코드 일부가 빠졌을 때 나와요. 결과 화면에서 <b class="btn">초대 코드 복사</b>로 다시 복사해서 붙여 넣어 보세요.</p></div>
+      <div class="box"><strong>PC는 2대까지</strong><p>초대 코드 하나로 PC 2대까지 쓸 수 있어요. 3번째 PC에서는 "DEVICE LIMIT" 화면이 나와요. PC를 바꿨다면 단톡방에서 모브에게 예전 PC 해제를 부탁하세요.</p></div>
+    </section>
+
+    <!-- 5 -->
+    <section class="chapter" id="ch5">
+      <div class="chapter-head"><span class="chapter-no">5</span><span class="chapter-kicker">STEP 5</span><h2>설정 마법사</h2></div>
+      <p>처음 시작하면 "Welcome" 설정 마법사가 떠요. 네 칸을 위에서부터 채우면 바로 쓸 수 있어요. 지금 다 하기 어렵다면 <b class="btn">나중에 하기</b>로 닫고, 6장 방법대로 화면에서 해도 똑같아요.</p>
+      <div class="figs">
+        <figure><button type="button" class="zoom"><img src="img/a04-setup-top.jpg" alt="설정 마법사 위쪽" loading="lazy" /></button><figcaption>1. 브라우저 준비 · 2. AI 키</figcaption></figure>
+        <figure><button type="button" class="zoom"><img src="img/a05-setup-bottom.jpg" alt="설정 마법사 아래쪽" loading="lazy" /></button><figcaption>3. 계정 추가 · 4. 로그인</figcaption></figure>
+      </div>
+      <div class="table-wrap"><table>
+        <thead><tr><th>칸</th><th>할 일</th></tr></thead>
+        <tbody>
+          <tr><td>1. 브라우저 준비</td><td>자동으로 확인돼요. 오른쪽 위에 <span class="tag">준비됨</span>이 보이면 끝이에요. 작업은 이 전용 브라우저에서 따로 돌아가서, 평소 쓰는 크롬과 섞이지 않아요.</td></tr>
+          <tr><td>2. AI 키 (선택)</td><td>비워 둬도 돼요. 넣으면 서이추 인사말과 댓글을 상대 블로그에 맞게 AI가 써 줘요. 받는 방법은 10장에 있어요.</td></tr>
+          <tr><td>3. 계정 추가</td><td>네이버 블로그 ID와 내가 알아볼 이름을 넣고 <b class="btn">계정 추가</b>를 눌러요. 자세한 설명은 6장에 있어요.</td></tr>
+          <tr><td>4. 로그인</td><td><b class="btn">로그인 창 열기</b>를 눌러 네이버에 직접 로그인해요. 로그인 상태 유지를 꼭 체크하세요.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="prose">다 채웠으면 맨 아래 <b class="btn">설정 완료</b>를 눌러요. 마법사는 나중에 설정 탭에서 다시 열 수 있어요.</p>
+    </section>
+
+    <!-- 6 -->
+    <section class="chapter" id="ch6">
+      <div class="chapter-head"><span class="chapter-no">6</span><span class="chapter-kicker">STEP 6</span><h2>네이버 계정 추가 · 로그인</h2></div>
+      <p>프로그램이 내 블로그로 일을 하려면 계정을 등록하고 한 번 로그인해 둬야 해요. 계정은 여러 개 등록할 수 있어요.</p>
+      <ol class="steps">
+        <li><div class="step-body">
+          <p class="step-title">왼쪽 [+ 계정 추가]</p>
+          <figure><button type="button" class="zoom"><img src="img/a06-home-empty.jpg" alt="계정이 없는 홈 화면" loading="lazy" /></button><figcaption>왼쪽 "작업 계정" 칸의 [+ 계정 추가] 버튼이에요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">이름과 블로그 ID를 넣고 [저장]</p>
+          <p>오른쪽에 새 계정 창이 열려요.</p>
+          <ul>
+            <li><b>관리 이름</b>: 내가 알아보기 쉬운 이름이에요. 예: 메인 블로그</li>
+            <li><b>블로그 ID</b>: 내 블로그 주소 <code>blog.naver.com/</code> 뒤의 글자예요. 주소가 <code>blog.naver.com/myblog_01</code>이면 <code>myblog_01</code>을 넣어요.</li>
+            <li><b>프록시</b>: 모르면 비워 두세요. 비우면 내 인터넷으로 바로 연결돼요.</li>
+            <li><b>서이추 하루 한도</b>: 하루에 보낼 최대 신청 수예요. 처음엔 20 그대로 두는 걸 추천해요.</li>
+          </ul>
+          <figure><button type="button" class="zoom"><img src="img/a07-account-drawer.jpg" alt="새 계정 입력 창" loading="lazy" /></button><figcaption>다 넣었으면 오른쪽 아래 [저장]을 눌러요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">계정 카드의 [로그인하기]</p>
+          <p>저장하면 왼쪽에 계정 카드가 생기고 <span class="tag">로그인 필요</span>가 보여요. 카드의 <b class="btn">로그인하기</b>를 눌러요.</p>
+          <figure class="half"><button type="button" class="zoom"><img src="img/a08-account-card.jpg" alt="로그인이 필요한 계정 카드" loading="lazy" /></button><figcaption>카드 오른쪽 ⋯ 를 누르면 계정 정보를 고칠 수 있어요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">새로 열린 창에서 네이버 로그인</p>
+          <p>새 브라우저 창에 네이버 로그인 화면이 열려요. 아이디와 비밀번호를 <b>직접</b> 넣고, 아래 <b>로그인 상태 유지</b>를 꼭 체크한 뒤 <b class="btn">로그인</b>을 눌러요. 2단계 인증을 쓰면 휴대폰에서 승인해 주세요.</p>
+          <figure class="half"><button type="button" class="zoom"><img src="img/n1-naver-login.jpg" alt="네이버 로그인 화면" loading="lazy" /></button><figcaption>"로그인 상태 유지"를 체크해야 매번 다시 로그인하지 않아요.</figcaption></figure>
+          <div class="box must"><strong>비밀번호는 안전해요</strong><p>로그인은 네이버 공식 화면에서 직접 하고, 프로그램은 비밀번호를 저장하거나 어디로도 보내지 않아요. 로그인 상태만 내 PC에 남아요.</p></div>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">카드가 [준비됨]으로 바뀌면 끝</p>
+          <p>로그인이 끝나면 잠시 뒤 카드에 <span class="tag">준비됨</span>이 떠요. 로그인 창은 닫아도 돼요. 안 바뀌면 카드의 ⋯ → <b class="btn">세션 확인</b>을 눌러요. 계정이 더 있으면 1번부터 반복해요.</p>
+          <figure><button type="button" class="zoom"><img src="img/a09b-home-ready.jpg" alt="계정이 준비된 홈 화면" loading="lazy" /></button><figcaption>홈 화면에서 오늘 서이추·공감·댓글·스크랩 수를 한눈에 볼 수 있어요.</figcaption></figure>
+        </div></li>
+      </ol>
+    </section>
+
+    <!-- 7 -->
+    <section class="chapter" id="ch7">
+      <div class="chapter-head"><span class="chapter-no">7</span><span class="chapter-kicker">MAIN FEATURE</span><h2>서이추 자동 신청</h2></div>
+      <p>서로이웃 추가(서이추)는 내 블로그와 비슷한 주제의 블로그에 이웃 신청을 보내 이웃을 늘리는 방법이에요. 이웃이 늘면 내 글이 보일 기회가 넓어져요. 위쪽 <b class="btn">서이추</b> 탭에서 해요.</p>
+      <figure><button type="button" class="zoom"><img src="img/a10-buddy.jpg" alt="서이추 탭" loading="lazy" /></button><figcaption>오른쪽 위에 지금 선택된 계정과 오늘 신청 수가 보여요.</figcaption></figure>
+      <h3>방식 세 가지</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>방식</th><th>어떻게 찾나요</th><th>이럴 때 좋아요</th></tr></thead>
+        <tbody>
+          <tr><td>기본</td><td>검색어로 네이버 블로그 검색 결과를 훑어 블로그를 모은 뒤 신청해요.</td><td>처음 시작할 때, 내 주제와 맞는 이웃을 넓게 찾을 때</td></tr>
+          <tr><td>신입먹기</td><td>검색 결과 중 만든 지 정한 개월 이내인 새 블로그만 골라 신청해요.</td><td>서이추를 잘 받아 주는 막 시작한 블로그를 노릴 때</td></tr>
+          <tr><td>파도풀</td><td>이미 신청에 성공한 블로그의 이웃 목록을 따라가며 신청해요.</td><td>검색어가 떨어졌을 때, 비슷한 사람끼리 이어 가고 싶을 때</td></tr>
+        </tbody>
+      </table></div>
+      <h3>따라 하기</h3>
+      <ol class="steps">
+        <li><div class="step-body">
+          <p class="step-title">왼쪽에서 계정 카드를 눌러 골라요</p>
+          <p>금색 테두리가 생긴 계정으로 신청이 나가요.</p>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">방식을 고르고 검색어를 한 줄에 하나씩</p>
+          <p>내 블로그 주제와 맞는 단어를 넣어요. 예: 강아지 수제간식, 고양이 장난감. 신입먹기는 "개설 최대 개월"도 정해요(기본 5개월).</p>
+          <figure class="half"><button type="button" class="zoom"><img src="img/a11-buddy-newbie.jpg" alt="신입먹기 선택 화면" loading="lazy" /></button><figcaption>신입먹기를 고르면 개설 최대 개월 칸이 생겨요.</figcaption></figure>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">목표 건수를 정하고 먼저 [미리보기]</p>
+          <p><b class="btn">미리보기</b>는 신청을 보내지 않고, 어떤 블로그가 모이는지와 AI 인사말만 보여 줘요. 아래 결과 표에서 확인해 보세요.</p>
+        </div></li>
+        <li><div class="step-body">
+          <p class="step-title">마음에 들면 [신청 시작]</p>
+          <p>신청은 한 건씩 20~60초 간격을 두고 천천히 나가요. 사람이 하는 것처럼 보이게 하려는 거예요. 멈추고 싶으면 <b class="btn">중지</b>를 눌러요.</p>
+          <p>계정이 여러 개면 <b class="btn">전체 계정 순차 실행</b>으로 차례대로 돌릴 수 있어요.</p>
+        </div></li>
+      </ol>
+      <div class="box tip"><strong>작업 중 화면</strong><p>작업용 브라우저는 작게 내려간 상태로 뒤에서 돌아가요. 다른 일을 해도 괜찮지만, 그 브라우저 창을 직접 닫지는 마세요. 화면 위쪽 금색 막대에서 진행 상황과 [중지] 버튼을 볼 수 있어요.</p></div>
+      <div class="box"><strong>저절로 멈추는 경우</strong><p>하루 한도를 다 쓰면 그날은 멈춰요. 네이버가 "하루 신청 수를 초과했다"고 하거나 확인 화면을 띄우면 계정 보호를 위해 바로 멈춰요. 다음 날 다시 하면 돼요. 상대 블로그의 이웃이 가득 차 있으면 신청할 수 없어서 자동으로 건너뛰어요.</p></div>
+    </section>
+
+    <!-- 8 -->
+    <section class="chapter" id="ch8">
+      <div class="chapter-head"><span class="chapter-no">8</span><span class="chapter-kicker">AUTOMATION</span><h2>매일 자동 예약</h2></div>
+      <p>정해 둔 시각마다 계정을 돌아가며 서이추를 알아서 실행해요. 위쪽 <b class="btn">스케줄</b> 탭에서 해요.</p>
+      <figure><button type="button" class="zoom"><img src="img/a12-schedule.jpg" alt="스케줄 탭" loading="lazy" /></button><figcaption>예약을 켜면 위에 "다음 예약: 오늘 10:00 · 다음 계정" 처럼 보여요.</figcaption></figure>
+      <ol class="steps">
+        <li><div class="step-body"><p class="step-title">실행 요일과 시각을 정해요</p><p>요일을 체크하고, 시각을 고른 뒤 <b class="btn">시각 추가</b>를 눌러요. 예: 10:00, 14:00, 19:00. 시각 옆 ✕ 로 지울 수 있어요.</p></div></li>
+        <li><div class="step-body"><p class="step-title">기본 실행 내용을 정해요</p><p>방식(기본·신입먹기·파도풀), 한 번에 보낼 수(0이면 남은 한도 전부), 기본 검색어를 넣어요. 계정마다 다른 검색어를 쓰려면 오른쪽 계정 칸에 따로 적어요.</p></div></li>
+        <li><div class="step-body"><p class="step-title">계정 순서를 정해요</p><p>오른쪽 "계정 로테이션 순서"에서 계정을 끌어서 순서를 바꿔요. 금색 <span class="tag">다음 차례</span>가 붙은 계정부터 실행돼요. 로그인이 풀렸거나 그날 한도를 다 쓴 계정은 자동으로 건너뛰어요.</p></div></li>
+        <li><div class="step-body"><p class="step-title">[예약 사용]을 켜고 [저장]</p><p>위쪽 스위치를 켜고 <b class="btn">저장</b>을 눌러요. 바로 한 번 돌려 보고 싶으면 <b class="btn">지금 다음 계정 실행</b>을 누르면 돼요.</p></div></li>
+      </ol>
+      <div class="box warn"><strong>프로그램이 켜져 있어야 해요</strong><p>예약은 MOBE 프로그램이 켜져 있을 때만 실행돼요. PC를 끄거나 절전 모드로 들어가면 그 시각 예약은 건너뛰어요. 프로그램을 닫을 때 예약이 켜져 있으면 한 번 더 물어봐요.</p></div>
+    </section>
+
+    <!-- 9 -->
+    <section class="chapter" id="ch9">
+      <div class="chapter-head"><span class="chapter-no">9</span><span class="chapter-kicker">ENGAGEMENT</span><h2>공감 · 댓글 · 스크랩</h2></div>
+      <p>소통하고 싶은 블로그의 글에 공감, 댓글, 스크랩을 자동으로 해 줘요. 위쪽 <b class="btn">블로그 작업</b> 탭에서 네 단계로 해요.</p>
+      <figure><button type="button" class="zoom"><img src="img/a13-work.jpg" alt="블로그 작업 탭" loading="lazy" /></button><figcaption>위쪽 1~4 단계 표시가 지금 어디까지 했는지 알려 줘요.</figcaption></figure>
+      <ol class="steps">
+        <li><div class="step-body"><p class="step-title">1. 대상 블로그</p><p>블로그 ID나 주소를 한 줄에 하나씩 넣고 <b class="btn">목록에 추가</b>를 눌러요. 표에서 블로그마다 할 작업(공감·댓글·스크랩)과 머무는 시간을 고를 수 있어요. 바꿨으면 <b class="btn">변경사항 저장</b>.</p></div></li>
+        <li><div class="step-body"><p class="step-title">2. 글 수집</p><p><b class="btn">글 수집</b>을 누르면 대상 블로그의 글 목록을 모아 와요. 특정 글만 하고 싶으면 체크하고, 아무것도 체크하지 않으면 모은 글 전체에서 골라요.</p></div></li>
+        <li><div class="step-body"><p class="step-title">3. 작업 만들기</p><p><b class="btn">작업 목록 만들기</b>를 누르면 할 일이 만들어져요. 계정별 하루 한도와 이미 한 글은 자동으로 빠져요. 하루 목표 개수는 설정 탭에서 바꿔요.</p></div></li>
+        <li><div class="step-body"><p class="step-title">4. 실행</p><p><b class="btn">작업 실행</b>을 누르면 한 글씩 들어가 읽는 것처럼 머물다가 작업해요. 멈추려면 <b class="btn">작업 중지</b>.</p></div></li>
+      </ol>
+      <div class="box tip"><strong>스크랩 카테고리</strong><p>스크랩한 글을 내 블로그의 특정 카테고리에 넣고 싶으면, 계정 카드 ⋯ → "스크랩 카테고리 번호/이름"을 적어 두세요. 비우면 네이버 기본 카테고리로 들어가요.</p></div>
+    </section>
+
+    <!-- 10 -->
+    <section class="chapter" id="ch10">
+      <div class="chapter-head"><span class="chapter-no">10</span><span class="chapter-kicker">MORE</span><h2>기록 · 설정 · AI 키</h2></div>
+      <h3>기록 탭</h3>
+      <p class="prose">프로그램이 한 일이 쉬운 말로 시간순으로 쌓여요. 위쪽 버튼으로 서이추만, 블로그 작업만, 오류·경고만 골라 볼 수 있고 검색도 돼요. 문제가 생기면 이 화면을 캡처해서 보여 주면 빨리 해결할 수 있어요.</p>
+      <figure><button type="button" class="zoom"><img src="img/a14-logs.jpg" alt="기록 탭" loading="lazy" /></button></figure>
+      <h3>설정 탭</h3>
+      <p class="prose">AI 키, 서이추 간격, 하루 최대 수, 작업할 때 머무는 시간 같은 세부 값을 바꿔요. 잘 모르겠으면 기본값 그대로 두는 게 가장 안전해요. 바꾼 뒤에는 오른쪽 위 <b class="btn">설정 저장</b>.</p>
+      <figure><button type="button" class="zoom"><img src="img/a15-settings.jpg" alt="설정 탭" loading="lazy" /></button></figure>
+      <h3>AI 키 받는 방법 (선택)</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>키</th><th>쓰는 곳</th><th>받는 방법</th></tr></thead>
+        <tbody>
+          <tr><td>Gemini</td><td>서이추 인사말</td><td><a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a>에 구글 계정으로 들어가 <b>API 키 만들기</b>를 눌러요. 나온 키를 복사해 설정 탭 "Gemini API 키"에 붙여 넣어요. 무료로 쓸 수 있는 범위가 있어요.</td></tr>
+          <tr><td>OpenAI</td><td>블로그 댓글</td><td><a href="https://platform.openai.com/api-keys" target="_blank" rel="noopener">platform.openai.com/api-keys</a>에서 <b>Create new secret key</b>로 만들어요. 사용한 만큼 요금이 나가는 유료 서비스예요.</td></tr>
+        </tbody>
+      </table></div>
+      <p class="prose">키를 넣은 뒤 설정 탭 위쪽 <b class="btn">Gemini 키 테스트</b> / <b class="btn">OpenAI 키 테스트</b>로 잘 되는지 확인하고 <b class="btn">설정 저장</b>을 눌러요. 키가 없으면 미리 준비된 기본 문구로 보내요.</p>
+      <div class="box warn"><strong>키는 비밀번호처럼</strong><p>API 키는 다른 사람에게 보여 주거나 단톡방에 올리지 마세요. 키는 내 PC에만 저장돼요.</p></div>
+      <h3>밝은 화면으로 바꾸기</h3>
+      <p class="prose">오른쪽 위 달(☾) 모양 버튼을 누르면 밝은 화면으로, 해 모양을 누르면 다시 어두운 화면으로 바뀌어요.</p>
+      <figure><button type="button" class="zoom"><img src="img/a16-home-light.jpg" alt="밝은 테마 홈 화면" loading="lazy" /></button></figure>
+    </section>
+
+    <!-- 11 -->
+    <section class="chapter" id="ch11">
+      <div class="chapter-head"><span class="chapter-no">11</span><span class="chapter-kicker">SAFE USE</span><h2>안전하게 쓰는 요령</h2></div>
+      <ul class="checklist">
+        <li><b>처음 1주일은 천천히</b><span>하루 한도를 10~20으로 두고, 블로그가 익숙해지면 조금씩 늘려요. 계정당 최대 90까지예요.</span></li>
+        <li><b>간격은 기본값 그대로</b><span>신청 사이 20~60초 간격이 사람처럼 보이게 해 줘요. 너무 줄이지 마세요.</span></li>
+        <li><b>검색어는 내 주제와 맞게</b><span>주제가 비슷한 이웃일수록 서로 소통이 잘 되고 오래 남아요.</span></li>
+        <li><b>로그인이 풀리면 다시 로그인</b><span>카드에 "로그인 필요"가 보이면 [로그인하기]로 다시 로그인해요.</span></li>
+        <li><b>멈췄다면 다음 날</b><span>네이버 제한으로 멈춘 날은 억지로 다시 돌리지 말고 다음 날 이어서 해요.</span></li>
+        <li><b>계정이 여러 개라면</b><span>한 PC에서 계정을 많이 돌리면 설정에 프록시를 넣는 방법도 있어요. 잘 모르면 모브에게 물어보세요.</span></li>
+      </ul>
+    </section>
+
+    <!-- 12 -->
+    <section class="chapter" id="ch12">
+      <div class="chapter-head"><span class="chapter-no">12</span><span class="chapter-kicker">HELP</span><h2>문제가 생겼을 때</h2></div>
+      <h3>잠김 화면이 나왔어요</h3>
+      <p class="prose">프로그램은 30분마다 초대 상태를 확인해요. 문제가 있으면 아래처럼 잠김 화면이 나오고, 해결되면 <b class="btn">다시 확인</b>을 눌러 바로 이어서 쓸 수 있어요.</p>
+      <figure><button type="button" class="zoom"><img src="img/a17-locked-paused.jpg" alt="잠김 화면 예시" loading="lazy" /></button><figcaption>예시: ACCESS PAUSED (잠시 멈춤)</figcaption></figure>
+      <div class="table-wrap"><table>
+        <thead><tr><th>화면 맨 위 글자</th><th>뜻</th><th>이렇게 해요</th></tr></thead>
+        <tbody>
+          <tr><td>ACCESS PAUSED</td><td>제작자가 잠시 멈춰 둔 상태</td><td>모브에게 문의 → 풀리면 [다시 확인]</td></tr>
+          <tr><td>DEVICE LIMIT</td><td>PC 대수(기본 2대)를 넘음</td><td>모브에게 예전 PC 해제 부탁 → [다시 확인]</td></tr>
+          <tr><td>CONNECTION NEEDED</td><td>7일 넘게 초대 상태를 확인하지 못함</td><td>인터넷 연결 확인 → [다시 확인]. PC 날짜·시간도 맞는지 봐요.</td></tr>
+          <tr><td>INVITATION REVOKED</td><td>초대장이 회수됨</td><td>새 초대 코드를 받았다면 [새 초대 코드 입력]</td></tr>
+          <tr><td>NOT REGISTERED</td><td>서버에 없는 코드</td><td>코드를 다시 복사해 넣고, 그래도 안 되면 모브에게 문의</td></tr>
+        </tbody>
+      </table></div>
+      <h3>자주 묻는 질문</h3>
+      <div class="table-wrap"><table>
+        <thead><tr><th>이럴 때</th><th>이렇게 해요</th></tr></thead>
+        <tbody>
+          <tr><td>신청 페이지가 안 열려요</td><td>"현재 파일을 열 수 없습니다"나 "신청을 보내지 못했어요"가 나오면, 카톡 안에서 링크를 눌러 열거나 크롬 시크릿 탭에 주소를 붙여 넣어 열어요. 폰에 구글 계정이 여러 개 로그인돼 있으면 가끔 생겨요.</td></tr>
+          <tr><td>결과 확인이 안 돼요</td><td>신청할 때 쓴 닉네임 그대로(띄어쓰기 포함) 넣어 보세요. 숫자 4자리를 5번 틀리면 10분 동안 막혀요.</td></tr>
+          <tr><td>설치 파일이 안 받아져요</td><td>2장의 [무시하고 다운로드]를 눌렀는지 확인해요. 회사 PC는 보안 정책 때문에 막힐 수 있어요.</td></tr>
+          <tr><td>계정이 계속 "로그인 필요"예요</td><td>로그인할 때 "로그인 상태 유지"를 체크했는지 확인해요. 계정 ⋯ → [세션 초기화] 뒤 다시 로그인해 보세요.</td></tr>
+          <tr><td>예약이 안 돌았어요</td><td>그 시각에 프로그램이 켜져 있었는지, PC가 절전 상태가 아니었는지 확인해요. 스케줄 탭 "최근 예약 실행"에 이유가 나와요.</td></tr>
+          <tr><td>컴퓨터를 바꿨어요</td><td>새 PC에 설치하고 같은 초대 코드를 넣어요. PC가 2대를 넘으면 모브에게 예전 PC 해제를 부탁해요.</td></tr>
+          <tr><td>새 버전이 나왔어요</td><td>따로 할 일이 없어요. 앱이 알아서 새 버전을 받아 두고 화면 위쪽에 <b class="btn">지금 업데이트</b>를 띄워요. 누르면 1분쯤 뒤 새 버전으로 다시 켜지고, 계정과 기록은 그대로 남아요. 다시 켜지지 않으면 바탕화면 아이콘으로 켜 주세요.</td></tr>
+          <tr><td>그 밖에 궁금한 건</td><td>기록 탭 화면을 캡처해서 단톡방에서 모브에게 물어보세요.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="end">
+        <p>설명서를 끝까지 따라왔다면 이제 매일 알아서 이웃이 늘어나는 블로그가 준비됐어요.</p>
+        <p>이 설명서와 프로그램은 FOUNDERS EDITION 당첨자 본인만을 위한 거예요. 공유나 재배포는 하지 말아 주세요.</p>
+        <p class="sig">MOBE</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="크게 보기">
+  <img id="lightboxImg" alt="" />
+  <p>화면 아무 곳이나 누르면 닫혀요</p>
+</div>
+
+<script>
+  (function () {
+    // 휴대폰용 목차는 데스크톱 목차를 그대로 복사해서 쓴다.
+    var desktop = document.getElementById("tocList");
+    var mobile = document.getElementById("tocMobile");
+    mobile.innerHTML = desktop.innerHTML;
+    mobile.addEventListener("click", function (event) {
+      if (event.target.closest("a")) mobile.closest("details").open = false;
+    });
+
+    // 그림 크게 보기
+    var box = document.getElementById("lightbox");
+    var big = document.getElementById("lightboxImg");
+    document.addEventListener("click", function (event) {
+      var button = event.target.closest("button.zoom");
+      if (button) {
+        var img = button.querySelector("img");
+        big.src = img.src;
+        big.alt = img.alt;
+        box.hidden = false;
+        return;
+      }
+      if (!box.hidden && event.target.closest("#lightbox")) box.hidden = true;
+    });
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") box.hidden = true;
+    });
+
+    // 지금 읽는 장을 목차에 표시
+    var links = Array.prototype.slice.call(desktop.querySelectorAll("a"));
+    if ("IntersectionObserver" in window) {
+      var observer = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          links.forEach(function (link) { link.classList.toggle("on", link.getAttribute("href") === "#" + entry.target.id); });
+        });
+      }, { rootMargin: "-30% 0px -60% 0px" });
+      document.querySelectorAll(".chapter").forEach(function (section) { observer.observe(section); });
+    }
+  })();
+</script>
+
+</body>
+</html>
